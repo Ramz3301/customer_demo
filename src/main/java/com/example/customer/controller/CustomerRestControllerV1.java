@@ -3,10 +3,10 @@ package com.example.customer.controller;
 import com.example.customer.model.Customer;
 import com.example.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Optional;
 
@@ -31,5 +31,30 @@ public class CustomerRestControllerV1 {
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Customer> saveCustomer(@RequestBody @Validated Customer customer) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        if (customer == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        customerService.save(customer);
+
+        return new ResponseEntity<>(customer, httpHeaders, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Customer> updateCustomer(Customer customer, UriComponentsBuilder builder) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        if (customer == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        customerService.save(customer);
+
+        return new ResponseEntity<>(customer, httpHeaders, HttpStatus.OK);
+    }
 
 }
